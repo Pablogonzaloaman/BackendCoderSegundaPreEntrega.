@@ -1,10 +1,16 @@
 <div>
-  <h1>Hola tarolas!</h1>
-  <p>Listado de Productos</p>
-  {{#each products}}
-    <p>Nombre:{{this.title}}</p>
-    <p>Precio:{{this.price}}</p>
-    <hr/>
-  {{/each}}
+    {{#each allProducts}}
+    <p>
+        id: {{this._id}}
+        title: {{this.title}}
+        description: {{this.description}}
+        price: {{this.price}}
+        thumbnail: {{this.thumbnail}}
+        code: {{this.code}}
+        stock: {{this.stock}}
+        category: {{this.category}}
+        status: {{this.status}}
+    </p>
+    <hr>
+    {{/each}}
 </div>
-<script src="js/main.js" ></script>

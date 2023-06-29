@@ -1,62 +1,70 @@
-import { UserModel } from "../DAO/models/users.models.js";
+import { UserModel } from "../DAO/models/users.model.js";
 
-class UserService {
-  async validateUser(firstName, lastName, email) {
-    if (!firstName || !lastName || !email) {
-      throw new Error("validation error: all fields are required.");
+import { UserModel } from "../DAO/models/users.model.js";
+
+class UserService{
+    async getAll() {
+        try {
+            let allUsers = await UserModel.find({}, { __v: false });
+            return allUsers;
+        } catch (error) {
+            console.log(error);
+            throw new Error("Unable to get all users");
+        }
     }
-  }
 
-  async getAll() {
-    const users = await UserModel.find({});
-    if (!users) {
-      throw new Error("users not found.");
+    async getOne(username){
+        const users = await UserModel.findOne({username:username},{password:false,__v:false});
+        return users
     }
-    return users;
-  }
 
-  async getOne(_id) {
-    const user = await UserModel.findById({ _id });
-    if (!user) {
-      throw new Error("user not found.");
+    async create({ first_name,last_name,username, email,age, password }) {
+        try {
+            const findUser = await UserModel.findOne({
+                $or: [
+                    { username: username },
+                    { email: email }
+                ]
+            });
+
+            if (findUser) {
+                return false;
+            } else {
+                const userCreated = await UserModel.create({ first_name,last_name,username, email,age, password });
+                return userCreated;
+            }
+        } catch (error) {
+            console.error('Error creating user:', error);
+            throw error;
+        }
     }
-    return user;
-  }
 
-  async deleteOne(_id) {
-    const deleteUser = await UserModel.findByIdAndDelete(_id);
-    if (!deleteUser) {
-      throw new Error("user not found.");
+    async update({id, firstName, lastName, email}){
+        const userUpdated = await UserModel.updateOne(
+            { _id: id },
+            { firstName, lastName, email }
+        );
+        return userUpdated
     }
-    return deleteUser;
-  }
 
-  //ver porq un error rompe la app y otro no
-  async createOne(body) {
-    const { firstName, lastName, email } = body;
-    //this.validateUser(firstName, lastName, email);
-    const userCreated = await UserModel.create({
-      firstName,
-      lastName,
-      email,
-    });
-    return userCreated;
-  }
+    async delete({id}){
+        const userDeleted = await UserModel.deleteOne({ _id: id });
+        return userDeleted
+    }
 
-  //aca hay un error!!!!!!!!
-  async updateOne(_id, body) {
-    //try {
-    const { firstName, lastName, email } = body;
-    await this.validateUser(firstName, lastName, email);
-    const userUpdated = await UserModel.updateOne(
-      { _id: _id },
-      { firstName, lastName, email }
-    );
-    return userUpdated;
-    /*  } catch (error) {
-      throw new Error("user not found bro.");
-    } */
-  }
+    async authenticate(username, password) {
+        try {
+            const user = await UserModel.findOne({ username: username, password: password });
+            if (!user) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (error) {
+            console.error('Error authenticating user:', error);
+            throw error;
+        }
+    }
 }
 
-export const userService = new UserService();
+export const userService = new UserService()

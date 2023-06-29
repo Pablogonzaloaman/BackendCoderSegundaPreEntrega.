@@ -1,1 +1,1 @@
-[{"cid":"3dbb00b3-5968-47a4-91ab-6cc27b589e02","products":[{"_id":3,"quantity":3}]},{"cid":"4fas00b3-5968-45sd-a5fk-6cc27b5845ab","products":[{"_id":4,"quantity":0}]},{"cid":"bb9de70b-3a53-4362-a692-8f5ddb73e693","products":[]}]
+[{"id":1,"products":[{"id":2,"quantity":6},{"id":5,"quantity":3},{"id":1,"quantity":5}]},{"id":2,"products":[{"id":1,"quantity":2},{"id":4,"quantity":3}]}]
